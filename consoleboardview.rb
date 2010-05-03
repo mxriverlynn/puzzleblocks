@@ -1,11 +1,12 @@
 class ConsoleBoardView
-  def initialize(board, player)
-    @board = board
-    @player = player
+  def initialize
     @squares = {:x => "[ ]", :e => "[O]", :b => "[ ]", :p => "[X]", :n => "   "}
   end
 
-  def print_board()
+  def print_board(board, player)
+    @board = board
+    @player = player
+
     @board.board.each do |row|
       row.each do |column|
         key = column.keys[0]

@@ -6,7 +6,7 @@ class Point
     @y = y
   end
 
-  def equals(point)
+  def ==(point)
     return (x==point.x && y==point.y)
   end
 end
