@@ -1,11 +1,3 @@
-board = {
-  :row1 => [ :x, :x, :x, :x, :x],
-  :row2 => [ :x, :x, :x, :n, :b],
-  :row3 => [ :x, :e, :x, :n, :x],
-  :row4 => [ :x, :x, :x, :n, :x],
-  :row5 => [ :x, :x, :x, :x, :x]
-}
-
 class Symbol
   def <=>(sym)
     return self.to_s<=>sym.to_s
@@ -13,14 +5,27 @@ class Symbol
 end
 
 class Player
-  attr_accessor :x, :y
+  attr_accessor :current_location
+
+  def initialize(starting_location)
+    @current_location = starting_location
+  end
 end
 
-class ConsoleBoard
-  def initialize(board, player)
+class Point
+  attr_accessor :x, :y
+
+  def initialize(x, y)
+    @x = x
+    @y = y
+  end
+end
+
+class GameBoard
+  attr_accessor :board, :goal, :start
+
+  def initialize(board)
     @board = parse_board(board)
-    @player = player
-    @squares = {:x => "[ ]", :e => "[O]", :b => "[ ]", :p => "[X]", :n => "   "}
   end
 
   def parse_board(board)
@@ -33,15 +38,26 @@ class ConsoleBoard
       columns.each do |column|
         parsed_board[row_num][column_num] = {column => [row_num, column_num]}
 
+        @goal = Point.new(column_num, row_num) if column == :e
+        @start = Point.new(column_num, row_num) if column == :b
+
         column_num = column_num + 1
       end
       row_num = row_num + 1
     end
     return parsed_board
   end
+end
+
+class ConsoleBoard
+  def initialize(board, player)
+    @board = board
+    @player = player
+    @squares = {:x => "[ ]", :e => "[O]", :b => "[ ]", :p => "[X]", :n => "   "}
+  end
 
   def print_board()
-    @board.each do |row|
+    @board.board.each do |row|
       row.each do |column|
         key = column.keys[0]
         x = column[key][0]
@@ -55,13 +71,23 @@ class ConsoleBoard
   end
 
   def player_on_piece(row, column)
-    return (@player.x == column) && (@player.y == row)
+    return (@player.current_location.x == column) && (@player.current_location.y == row)
   end
 
 end
 
-player = Player.new
-player.x = 1
-player.y = 1
-cb = ConsoleBoard.new(board, player)
+level1 = {
+  :row1 => [ :x, :x, :x, :x, :x],
+  :row2 => [ :x, :x, :x, :n, :b],
+  :row3 => [ :x, :e, :x, :n, :x],
+  :row4 => [ :x, :x, :x, :n, :x],
+  :row5 => [ :x, :x, :x, :x, :x]
+}
+
+gameboard = GameBoard.new(level1)
+
+player = Player.new(gameboard.start)
+
+cb = ConsoleBoard.new(gameboard, player)
 cb.print_board
+
