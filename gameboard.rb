@@ -13,7 +13,7 @@ class GameBoard
 
       column_num = 0
       columns.each do |column|
-        parsed_board[row_num][column_num] = {column => [row_num, column_num]}
+        parsed_board[row_num][column_num] = {column => [column_num, row_num]}
 
         @goal = Point.new(column_num, row_num) if column == :e
         @start = Point.new(column_num, row_num) if column == :b

@@ -20,7 +20,7 @@ class Game
       player.moveright if info == 'l'
       
       @complete = true if info == 'q'
-      @complete = true if player.current_location == board.goal
+      @complete = true if player.on_point(board.goal.x, board.goal.y)
       
       clear_screen
       view.print_board(board, player)
